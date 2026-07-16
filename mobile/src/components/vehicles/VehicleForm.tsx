@@ -2,6 +2,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import {
     Alert,
+    Image,
     Keyboard,
     KeyboardAvoidingView,
     Platform,
@@ -13,12 +14,13 @@ import {
     View,
 } from "react-native";
 
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import AppInput from "../ui/AppInput";
-import PrimaryButton from "../ui/PrimaryButton";
-
 import { addVehicle, updateVehicle } from "../../services/vehicle.service";
 import { Vehicle, VehicleStatus } from "../../types/Vehicle";
+import AppInput from "../ui/AppInput";
+import AppSelect from "../ui/AppSelect";
+import PrimaryButton from "../ui/PrimaryButton";
 
 type VehicleFormProps = {
   mode: "create" | "edit";
@@ -52,8 +54,9 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
   const [observaciones, setObservaciones] = useState(
     vehicle?.observaciones ?? "",
   );
+  const [foto, setFoto] = useState(vehicle?.foto ?? "");
 
-  const guardarVehiculo = () => {
+  const guardarVehiculo = async () => {
     if (!patente || !marca || !modelo || !anio || !color || !kilometraje) {
       Alert.alert("Campos incompletos", "Complete toda la información.");
       return;
@@ -84,12 +87,14 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
       mantencion,
 
       observaciones,
+
+      foto,
     };
 
     if (mode === "create") {
-      addVehicle(nuevoVehiculo);
+      await addVehicle(nuevoVehiculo);
     } else {
-      updateVehicle(nuevoVehiculo);
+      await updateVehicle(nuevoVehiculo);
     }
 
     Alert.alert(
@@ -123,6 +128,25 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
     }
 
     return `${valor.slice(0, 2)}-${valor.slice(2, 4)}-${valor.slice(4)}`;
+  };
+  const seleccionarFoto = async () => {
+    const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permiso.granted) {
+      Alert.alert("Permiso requerido", "Debe permitir el acceso a la galería.");
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!resultado.canceled) {
+      setFoto(resultado.assets[0].uri);
+    }
   };
 
   return (
@@ -188,7 +212,25 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
             onChangeText={setKilometraje}
           />
 
-          <AppInput label="Estado" value={estado} editable={false} />
+          <AppSelect
+            label="Estado"
+            value={estado}
+            onValueChange={(value) => setEstado(value as VehicleStatus)}
+            items={[
+              {
+                label: "Activo",
+                value: "Activo",
+              },
+              {
+                label: "Mantenimiento",
+                value: "Mantenimiento",
+              },
+              {
+                label: "Fuera de servicio",
+                value: "Fuera de servicio",
+              },
+            ]}
+          />
 
           <Text style={styles.label}>Próxima revisión técnica</Text>
 
@@ -237,7 +279,17 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
               }}
             />
           )}
+          <Text style={styles.label}>Foto del vehículo</Text>
 
+          <Pressable style={styles.imageButton} onPress={seleccionarFoto}>
+            <Text style={styles.imageButtonText}>
+              {foto ? "Cambiar foto" : "Seleccionar foto"}
+            </Text>
+          </Pressable>
+
+          {foto !== "" && (
+            <Image source={{ uri: foto }} style={styles.preview} />
+          )}
           <AppInput
             label="Observaciones"
             placeholder="Ingrese observaciones..."
@@ -297,5 +349,25 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 15,
     marginBottom: 40,
+  },
+  imageButton: {
+    backgroundColor: "#005A9C",
+    padding: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+
+  imageButtonText: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+
+  preview: {
+    width: "100%",
+    height: 220,
+    borderRadius: 15,
+    marginBottom: 20,
   },
 });

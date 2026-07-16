@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import {
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,12 @@ export default function VehicleDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const vehicle = getVehicleById(id);
+  const estadoColor =
+    vehicle?.estado === "Activo"
+      ? "#16A34A"
+      : vehicle?.estado === "Mantenimiento"
+        ? "#F59E0B"
+        : "#DC2626";
   const eliminarVehiculo = () => {
     Alert.alert(
       "Eliminar vehículo",
@@ -30,9 +37,9 @@ export default function VehicleDetailsScreen() {
         {
           text: "Eliminar",
           style: "destructive",
-          onPress: () => {
+          onPress: async () => {
             if (vehicle) {
-              deleteVehicle(vehicle.id);
+              await deleteVehicle(vehicle.id);
 
               Alert.alert("Éxito", "Vehículo eliminado correctamente", [
                 {
@@ -63,7 +70,11 @@ export default function VehicleDetailsScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerCard}>
-        <Ionicons name="car-sport" size={70} color="#005A9C" />
+        {vehicle.foto ? (
+          <Image source={{ uri: vehicle.foto }} style={styles.headerImage} />
+        ) : (
+          <Ionicons name="car-sport" size={70} color="#005A9C" />
+        )}
 
         <Text style={styles.title}>
           {vehicle.marca} {vehicle.modelo}
@@ -71,7 +82,7 @@ export default function VehicleDetailsScreen() {
 
         <Text style={styles.plate}>{vehicle.patente}</Text>
 
-        <View style={styles.badge}>
+        <View style={[styles.badge, { backgroundColor: estadoColor }]}>
           <Text style={styles.badgeText}>{vehicle.estado}</Text>
         </View>
       </View>
@@ -181,7 +192,6 @@ const styles = StyleSheet.create({
 
   badge: {
     marginTop: 18,
-    backgroundColor: "#16A34A",
     paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 30,
@@ -252,5 +262,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 17,
     marginLeft: 10,
+  },
+  headerImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 20,
+    marginBottom: 15,
+    resizeMode: "cover",
   },
 });

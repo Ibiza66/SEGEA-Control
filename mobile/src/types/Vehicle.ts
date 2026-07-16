@@ -12,4 +12,5 @@ export interface Vehicle {
   revisionTecnica: Date;
   mantencion: Date;
   observaciones: string;
+  foto?: string;
 }

@@ -7,29 +7,47 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import VehicleCard from "../../src/components/cards/VehicleCard";
 import AppInput from "../../src/components/ui/AppInput";
 
-import { getVehicles } from "../../src/services/vehicle.service";
+import { getVehicles, loadVehicles } from "../../src/services/vehicle.service";
 import { Vehicle } from "../../src/types/Vehicle";
 
 export default function VehiclesScreen() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-
+  const [search, setSearch] = useState("");
   useFocusEffect(
     useCallback(() => {
-      setVehicles(getVehicles());
+      const cargarVehiculos = async () => {
+        await loadVehicles();
+        setVehicles(getVehicles());
+      };
+
+      cargarVehiculos();
     }, []),
   );
+  const filteredVehicles = vehicles.filter((vehicle) => {
+    const text = search.toLowerCase();
 
+    return (
+      vehicle.patente.toLowerCase().includes(text) ||
+      vehicle.marca.toLowerCase().includes(text) ||
+      vehicle.modelo.toLowerCase().includes(text)
+    );
+  });
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Vehículos</Text>
 
-      <AppInput label="Buscar" placeholder="Patente o modelo..." />
+      <AppInput
+        label="Buscar"
+        placeholder="Patente, marca o modelo..."
+        value={search}
+        onChangeText={setSearch}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.list}
       >
-        {vehicles.map((vehicle) => (
+        {filteredVehicles.map((vehicle) => (
           <VehicleCard
             key={vehicle.id}
             patente={vehicle.patente}
@@ -37,6 +55,7 @@ export default function VehiclesScreen() {
             modelo={vehicle.modelo}
             anio={vehicle.anio}
             estado={vehicle.estado}
+            foto={vehicle.foto}
             onPress={() =>
               router.push({
                 pathname: "/vehicles/details",

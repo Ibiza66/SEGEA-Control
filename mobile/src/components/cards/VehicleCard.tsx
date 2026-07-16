@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { VehicleStatus } from "../../types/Vehicle";
 
 type Props = {
@@ -9,6 +8,7 @@ type Props = {
   modelo: string;
   anio: number;
   estado: VehicleStatus;
+  foto?: string;
   onPress: () => void;
 };
 
@@ -18,6 +18,7 @@ export default function VehicleCard({
   modelo,
   anio,
   estado,
+  foto,
   onPress,
 }: Props) {
   const estadoColor =
@@ -34,12 +35,16 @@ export default function VehicleCard({
       android_ripple={{ color: "#E3F2FD" }}
     >
       <View style={styles.left}>
-        <Ionicons
-          name="car-sport"
-          size={34}
-          color="#005A9C"
-          style={styles.icon}
-        />
+        {foto ? (
+          <Image source={{ uri: foto }} style={styles.image} />
+        ) : (
+          <Ionicons
+            name="car-sport"
+            size={34}
+            color="#005A9C"
+            style={styles.icon}
+          />
+        )}
 
         <View style={styles.info}>
           <Text style={styles.patente}>{patente}</Text>
@@ -126,5 +131,12 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontWeight: "600",
     fontSize: 12,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 12,
+    marginRight: 16,
+    resizeMode: "cover",
   },
 });
