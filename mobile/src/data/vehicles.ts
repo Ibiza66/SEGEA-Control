@@ -1,0 +1,43 @@
+import { Vehicle } from "../types/Vehicle";
+
+export const vehicles: Vehicle[] = [
+  {
+    id: "1",
+    patente: "AA-BB-11",
+    marca: "Toyota",
+    modelo: "Hilux",
+    anio: 2022,
+    color: "Blanco",
+    kilometraje: 125000,
+    estado: "Activo",
+    revisionTecnica: new Date("2026-09-20"),
+    mantencion: new Date("2026-10-15"),
+    observaciones: "",
+  },
+  {
+    id: "2",
+    patente: "CC-DD-22",
+    marca: "Ford",
+    modelo: "Ranger",
+    anio: 2021,
+    color: "Gris",
+    kilometraje: 98000,
+    estado: "Mantenimiento",
+    revisionTecnica: new Date("2026-08-10"),
+    mantencion: new Date("2026-07-25"),
+    observaciones: "Cambio de aceite y revisión de frenos.",
+  },
+  {
+    id: "3",
+    patente: "EE-FF-33",
+    marca: "Mitsubishi",
+    modelo: "L200",
+    anio: 2023,
+    color: "Rojo",
+    kilometraje: 45000,
+    estado: "Activo",
+    revisionTecnica: new Date("2027-01-15"),
+    mantencion: new Date("2026-12-01"),
+    observaciones: "",
+  },
+];
