@@ -1,10 +1,14 @@
 import { router } from "expo-router";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import DashboardCard from "../src/components/cards/DashboardCard";
 
 export default function Dashboard() {
   return (
-    <View style={styles.container}>
+    <ScrollView
+  style={styles.container}
+  contentContainerStyle={styles.content}
+  showsVerticalScrollIndicator={false}
+>
       <Image
         source={require("../assets/logo/logo-segea.png")}
         style={styles.logo}
@@ -23,27 +27,43 @@ export default function Dashboard() {
       </Text>
 
       <View style={styles.grid}>
-        <DashboardCard
-          title="Vehículos"
-          icon="car-sport"
-          onPress={() => router.push("/vehicles" as any)}
-        />
+  <DashboardCard
+    title="Vehículos"
+    icon="car-sport"
+    onPress={() => router.push("/vehicles" as any)}
+  />
 
-        <DashboardCard title="Checklists" icon="clipboard" onPress={() => {}} />
+  <DashboardCard
+    title="Mantenimientos"
+    icon="build"
+    onPress={() => router.push("/maintenance" as any)}
+  />
 
-        <DashboardCard title="Equipos" icon="construct" onPress={() => {}} />
+  <DashboardCard
+    title="Equipo"
+    icon="people"
+    onPress={() => router.push("/team" as any)}
+  />
 
-        <DashboardCard title="Inspecciones" icon="search" onPress={() => {}} />
+  <DashboardCard
+  title="Inspecciones"
+  icon="search"
+  onPress={() => router.push("/inspections" as any)}
+/>
 
-        <DashboardCard title="Reportes" icon="bar-chart" onPress={() => {}} />
+  <DashboardCard
+  title="Reportes"
+  icon="bar-chart"
+  onPress={() => router.push("/reports" as any)}
+/>
 
-        <DashboardCard
-          title="Configuración"
-          icon="settings"
-          onPress={() => {}}
-        />
-      </View>
-    </View>
+  <DashboardCard
+    title="Configuración"
+    icon="settings"
+    onPress={() => {}}
+  />
+</View>
+    </ScrollView>
   );
 }
 
@@ -56,30 +76,33 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 280,
-    height: 110,
-    alignSelf: "center",
-    marginBottom: 15,
-  },
+  width: 180,
+  height: 70,
+  alignSelf: "center",
+  marginBottom: 8,
+},
 
   welcome: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#222",
-    marginBottom: 8,
-  },
+  fontSize: 26,
+  fontWeight: "bold",
+  color: "#222",
+  marginBottom: 4,
+},
 
   date: {
-    fontSize: 15,
-    color: "#777",
-    marginTop: 6,
-    marginBottom: 40,
-    textTransform: "capitalize",
-  },
+  fontSize: 14,
+  color: "#777",
+  marginTop: 2,
+  marginBottom: 20,
+  textTransform: "capitalize",
+},
 
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
+  content: {
+  paddingBottom: 35,
+},
 });
