@@ -11,49 +11,49 @@ import {
 } from "react-native";
 
 import {
-  deleteVehicle,
-  getVehicleById,
-} from "../../src/services/vehicle.service";
+  deleteEquipment,
+  getEquipmentById,
+} from "../../src/services/equipment.service";
 
-export default function VehicleDetailsScreen() {
+export default function EquipmentDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const vehicle = getVehicleById(id);
+ const equipment = getEquipmentById(id);
   const estadoColor =
-    vehicle?.estado === "Activo"
-      ? "#16A34A"
-      : vehicle?.estado === "Mantenimiento"
-        ? "#F59E0B"
-        : "#DC2626";
-  const eliminarVehiculo = () => {
-    Alert.alert(
-      "Eliminar vehículo",
-      `¿Desea eliminar el vehículo ${vehicle?.patente}?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            if (vehicle) {
-              await deleteVehicle(vehicle.id);
+  equipment?.estado === "Operativo"
+    ? "#16A34A"
+    : equipment?.estado === "En mantenimiento"
+      ? "#F59E0B"
+      : "#DC2626";
+  const eliminarEquipo = () => {
+  Alert.alert(
+    "Eliminar equipo",
+    `¿Desea eliminar ${equipment?.nombre}?`,
+    [
+      {
+        text: "Cancelar",
+        style: "cancel",
+      },
+      {
+        text: "Eliminar",
+        style: "destructive",
+        onPress: async () => {
+          if (equipment) {
+            await deleteEquipment(equipment.id);
 
-              Alert.alert("Éxito", "Vehículo eliminado correctamente", [
-                {
-                  text: "OK",
-                  onPress: () => router.replace("/vehicles"),
-                },
-              ]);
-            }
-          },
+            Alert.alert("Éxito", "Equipo eliminado correctamente", [
+              {
+                text: "OK",
+               onPress: () => router.replace("/equipment" as any),
+              },
+            ]);
+          }
         },
-      ],
-    );
-  };
-  if (!vehicle) {
+      },
+    ]
+  );
+};
+  if (!equipment) {
     return (
       <View
         style={{
@@ -62,7 +62,7 @@ export default function VehicleDetailsScreen() {
           alignItems: "center",
         }}
       >
-        <Text>Vehículo no encontrado.</Text>
+        <Text>Equipo no encontrado.</Text>
       </View>
     );
   }
@@ -70,84 +70,122 @@ export default function VehicleDetailsScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerCard}>
-        {vehicle.foto ? (
-          <Image source={{ uri: vehicle.foto }} style={styles.headerImage} />
-        ) : (
-          <Ionicons name="car-sport" size={70} color="#005A9C" />
-        )}
+        {equipment.foto ? (
+  <Image
+    source={{ uri: equipment.foto }}
+    style={styles.headerImage}
+  />
+) : (
+  <Ionicons
+    name="construct"
+    size={70}
+    color="#005A9C"
+  />
+)}
 
-        <Text style={styles.title}>
-          {vehicle.marca} {vehicle.modelo}
-        </Text>
+<Text style={styles.title}>
+  {equipment.nombre}
+</Text>
 
-        <Text style={styles.plate}>{vehicle.patente}</Text>
+<Text style={styles.plate}>
+  {equipment.codigo}
+</Text>
 
-        <View style={[styles.badge, { backgroundColor: estadoColor }]}>
-          <Text style={styles.badgeText}>{vehicle.estado}</Text>
-        </View>
+<View style={[styles.badge, { backgroundColor: estadoColor }]}>
+  <Text style={styles.badgeText}>
+    {equipment.estado}
+  </Text>
+</View>
       </View>
 
-      <Text style={styles.sectionTitle}>Información del vehículo</Text>
+      <Text style={styles.sectionTitle}>
+  Información del equipo
+</Text>
 
-      <View style={styles.infoCard}>
-        <Item
-  icon="pricetag"
-  label="ID del vehículo"
-  value={vehicle.id}
-/>
- <Item
+<View style={styles.infoCard}>
+  <Item
+    icon="pricetag"
+    label="ID"
+    value={equipment.id}
+  />
+
+  <Item
     icon="scan"
     label="NFC asociado"
-    value={vehicle.nfcId || "No asociado"}
+    value={equipment.nfcId || "No asociado"}
   />
-        <Item icon="calendar" label="Año" value={vehicle.anio.toString()} />
-        <Item icon="color-palette" label="Color" value={vehicle.color} />
-        <Item
-          icon="speedometer"
-          label="Kilometraje"
-          value={`${vehicle.kilometraje.toLocaleString("es-CL")} km`}
-        />
-        <Item
-          icon="construct"
-          label="Mantención"
-          value={vehicle.mantencion.toLocaleDateString("es-CL")}
-        />
-        <Item
-          icon="document-text"
-          label="Revisión Técnica"
-          value={vehicle.revisionTecnica.toLocaleDateString("es-CL")}
-        />
-      </View>
 
-      <Text style={styles.sectionTitle}>Observaciones</Text>
+  <Item
+    icon="cube"
+    label="Categoría"
+    value={equipment.categoria}
+  />
 
-      <View style={styles.infoCard}>
-        <Text style={styles.observation}>
-          {vehicle.observaciones || "Sin observaciones."}
-        </Text>
-      </View>
+  <Item
+    icon="business"
+    label="Marca"
+    value={equipment.marca}
+  />
+
+  <Item
+    icon="construct"
+    label="Modelo"
+    value={equipment.modelo}
+  />
+
+  <Item
+  icon="qr-code"
+  label="Número de serie"
+  value={equipment.numeroSerie}
+/>
+
+  <Item
+    icon="location"
+    label="Ubicación"
+    value={equipment.ubicacion}
+  />
+
+  <Item
+    icon="calendar"
+    label="Certificación"
+    value={equipment.fechaCertificacion.toLocaleDateString("es-CL")}
+  />
+
+  <Item
+    icon="time"
+    label="Vencimiento"
+    value={equipment.vencimientoCertificacion.toLocaleDateString("es-CL")}
+  />
+</View>
+<Text style={styles.sectionTitle}>Observaciones</Text>
+
+<View style={styles.infoCard}>
+  <Text style={styles.observation}>
+    {equipment.observaciones || "Sin observaciones."}
+  </Text>
+</View>
 
       <Pressable
         style={[styles.button, styles.editButton]}
         onPress={() =>
           router.push({
-            pathname: "/vehicles/edit",
+            pathname: "/equipment/edit",
             params: {
-              id: vehicle.id,
+              id: equipment.id,
             },
           })
         }
       >
         <Ionicons name="create-outline" size={22} color="white" />
-        <Text style={styles.buttonText}>Editar vehículo</Text>
+        <Text style={styles.buttonText}>Editar equipo</Text>
       </Pressable>
 
       <Pressable
         style={[styles.button, styles.deleteButton]}
-        onPress={eliminarVehiculo}
+        onPress={eliminarEquipo}
       >
         <Ionicons name="trash-outline" size={22} color="white" />
-        <Text style={styles.buttonText}>Eliminar vehículo</Text>
+        <Text style={styles.buttonText}>Eliminar equipo</Text>
       </Pressable>
     </ScrollView>
   );

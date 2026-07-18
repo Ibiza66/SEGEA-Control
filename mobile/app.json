@@ -40,7 +40,8 @@
         }
       ],
       "@react-native-community/datetimepicker",
-      "expo-asset"
+      "expo-asset",
+      "react-native-edge-to-edge"
     ],
     "experiments": {
       "typedRoutes": true,

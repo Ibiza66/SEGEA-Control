@@ -71,24 +71,24 @@ export default function Login() {
                 const usuario = await login(correo, password);
 
                 if (usuario) {
-                  router.replace("/dashboard");
+                  router.replace("/(tabs)");
                 } else {
                   Alert.alert("Error", "Correo o contraseña incorrectos");
                 }
               }}
             />
             <PrimaryButton
-              title="Iniciar sesión"
-              onPress={async () => {
-                const usuario = await login(correo, password);
+  title="Iniciar sesión"
+  onPress={async () => {
+    const usuario = await login(correo, password);
 
-                if (usuario) {
-                  router.replace("/dashboard");
-                } else {
-                  Alert.alert("Error", "Correo o contraseña incorrectos");
-                }
-              }}
-            />
+    if (usuario) {
+      router.replace("/(tabs)");
+    } else {
+      Alert.alert("Error", "Correo o contraseña incorrectos");
+    }
+  }}
+/>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>

@@ -3,62 +3,126 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {
   title: string;
+  description: string;
   icon: keyof typeof Ionicons.glyphMap;
+  iconColor: string;
+  iconBackground: string;
   onPress: () => void;
 };
-
-export default function DashboardCard({ title, icon, onPress }: Props) {
+export default function DashboardCard({
+  title,
+  description,
+  icon,
+  iconColor,
+  iconBackground,
+  onPress,
+}: Props) {
   return (
     <Pressable
       onPress={onPress}
-      android_ripple={{
-        color: "#E3F2FD",
-        borderless: false,
-      }}
-      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      android_ripple={{ color: "#E3F2FD" }}
+      style={({ pressed }) => [
+        styles.card,
+        pressed && styles.cardPressed,
+      ]}
     >
-      <View style={styles.iconContainer}>
-        <Ionicons name={icon} size={34} color="#005A9C" />
+      <View style={styles.left}>
+        <View
+  style={[
+    styles.iconContainer,
+    { backgroundColor: iconBackground },
+  ]}
+>
+          <Ionicons
+  name={icon}
+  size={22}
+  color={iconColor}
+/>
+        </View>
+
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>
+            {title}
+          </Text>
+
+          <Text style={styles.description}>
+            {description}
+          </Text>
+        </View>
       </View>
 
-      <Text style={styles.title}>{title}</Text>
+      <Ionicons
+        name="chevron-forward"
+        size={24}
+        color="#005A9C"
+      />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: "47%",
-    height: 150,
-    backgroundColor: "#FFFFFF",
+    width: "100%",
+    minHeight: 88,
+
+    backgroundColor: "#FFF",
     borderRadius: 18,
-    justifyContent: "center",
+
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+
+    flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    justifyContent: "space-between",
+
+    marginBottom: 14,
 
     shadowColor: "#000",
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.06,
     shadowRadius: 8,
     shadowOffset: {
       width: 0,
       height: 4,
     },
 
-    elevation: 4,
+    elevation: 3,
   },
 
   cardPressed: {
     transform: [{ scale: 0.98 }],
-    opacity: 0.95,
+  },
+
+  left: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
   },
 
   iconContainer: {
-    marginBottom: 15,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: "#EAF4FF",
+
+    justifyContent: "center",
+    alignItems: "center",
+
+    marginRight: 14,
+  },
+
+  textContainer: {
+    flex: 1,
   },
 
   title: {
-    fontSize: 17,
-    fontWeight: "600",
-    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#1E293B",
+  },
+
+  description: {
+    marginTop: 4,
+    fontSize: 14,
+    color: "#64748B",
   },
 });

@@ -71,12 +71,13 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
     }
 
     const nuevoVehiculo: Vehicle = {
-      id: vehicle?.id ?? Date.now().toString(),
+  id: vehicle?.id ?? `VH-${Date.now()}`,
 
-      patente,
-      marca,
-      modelo,
+  nfcId: vehicle?.nfcId ?? "",
 
+  patente,
+  marca,
+  modelo,
       anio: Number(anio),
       color,
       kilometraje: Number(kilometraje),
