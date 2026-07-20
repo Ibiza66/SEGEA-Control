@@ -13,21 +13,29 @@ import {
 
 import {
   getTasks,
+  loadTasks,
   deleteTask,
-} from "../../src/utils/tasksStorage";
+} from "../../src/services/task.service";
 export default function TasksScreen() {
   const [tasks, setTasks] = useState<any[]>([]);
 
   useFocusEffect(
-    useCallback(() => {
-      async function loadTasks() {
-        const data = await getTasks();
-        setTasks(data);
-      }
+  useCallback(() => {
 
-      loadTasks();
-    }, [])
-  );
+    async function loadData() {
+
+      await loadTasks();
+
+      const data = getTasks();
+
+      setTasks(data);
+
+    }
+
+    loadData();
+
+  }, [])
+);
   async function removeTask(id: string) {
   Alert.alert(
     "Eliminar tarea",
@@ -43,8 +51,11 @@ export default function TasksScreen() {
         onPress: async () => {
           await deleteTask(id);
 
-          const data = await getTasks();
-          setTasks(data);
+         
+
+await loadTasks();
+
+setTasks(getTasks());
         },
       },
     ]
@@ -81,34 +92,45 @@ export default function TasksScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingBottom: 120 }}
           renderItem={({ item }) => (
-            <View style={styles.card}>
-  <View style={styles.header}>
-    <Text style={styles.taskTitle}>
-      {item.taskType}
+  <View style={styles.card}>
+    <View style={styles.header}>
+      <Text style={styles.taskTitle}>
+        {item.titulo}
+      </Text>
+
+      <Pressable onPress={() => removeTask(item.id)}>
+        <Ionicons
+          name="trash-outline"
+          size={22}
+          color="#DC2626"
+        />
+      </Pressable>
+    </View>
+
+    <Text style={styles.info}>
+      👤 Responsable: {item.asignadoA}
     </Text>
 
-    <Pressable onPress={() => removeTask(item.id)}>
-      <Ionicons
-        name="trash-outline"
-        size={22}
-        color="#DC2626"
-      />
-    </Pressable>
+    <Text style={styles.info}>
+      📅 Fecha límite:{" "}
+      {new Date(item.fechaLimite).toLocaleDateString()}
+    </Text>
+
+    <Text style={styles.priority}>
+      Prioridad: {item.prioridad}
+    </Text>
+
+    <Text style={styles.info}>
+      Estado: {item.estado}
+    </Text>
+
+    {item.descripcion ? (
+      <Text style={styles.info}>
+        📝 {item.descripcion}
+      </Text>
+    ) : null}
   </View>
-
-  <Text style={styles.info}>
-    🚗 {item.vehicle}
-  </Text>
-
-  <Text style={styles.info}>
-    📅 {item.date}
-  </Text>
-
-  <Text style={styles.priority}>
-    Prioridad: {item.priority}
-  </Text>
-</View>
-          )}
+)}
         />
       )}
 

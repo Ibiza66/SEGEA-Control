@@ -1,6 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
 import {
+  router,
+  useLocalSearchParams,
+  useFocusEffect,
+} from "expo-router";import {
   Alert,
   Image,
   Pressable,
@@ -14,11 +17,38 @@ import {
   deleteVehicle,
   getVehicleById,
 } from "../../src/services/vehicle.service";
+import { useCallback, useState } from "react";
 
+
+import {
+  getVehicleInspectionsByVehicleId,
+  loadVehicleInspections,
+} from "../../src/services/vehicleInspection.service";
 export default function VehicleDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const vehicle = getVehicleById(id);
+  const [inspections, setInspections] = useState(
+  vehicle
+    ? getVehicleInspectionsByVehicleId(vehicle.id)
+    : []
+);
+
+useFocusEffect(
+  useCallback(() => {
+    async function cargar() {
+      await loadVehicleInspections();
+
+      if (vehicle) {
+        setInspections(
+          getVehicleInspectionsByVehicleId(vehicle.id)
+        );
+      }
+    }
+
+    cargar();
+  }, [vehicle])
+);
   const estadoColor =
     vehicle?.estado === "Activo"
       ? "#16A34A"
@@ -119,14 +149,74 @@ export default function VehicleDetailsScreen() {
         />
       </View>
 
-      <Text style={styles.sectionTitle}>Observaciones</Text>
 
+<Text style={styles.sectionTitle}>
+  Historial de inspecciones
+</Text>
+
+<View style={styles.infoCard}>
+  {inspections.length === 0 ? (
+    <Text style={styles.observation}>
+      Este vehículo aún no tiene inspecciones.
+    </Text>
+  ) : (
+    inspections.map((inspection) => (
+      <Pressable
+  key={inspection.id}
+  style={styles.inspectionItem}
+  onPress={() =>
+    router.push({
+      pathname: "/vehicles/inspection/details",
+      params: {
+        inspectionId: inspection.id,
+      },
+    })
+  }
+>
+  <Text style={styles.inspectionDate}>
+    {inspection.fecha}
+  </Text>
+
+  <Text>
+    Inspector: {inspection.inspector}
+  </Text>
+
+  <Text>
+    Estado: {inspection.estado}
+  </Text>
+</Pressable>
+    ))
+  )}
+</View>
+<Text style={styles.sectionTitle}>
+  Observaciones
+</Text>
       <View style={styles.infoCard}>
         <Text style={styles.observation}>
           {vehicle.observaciones || "Sin observaciones."}
         </Text>
       </View>
+     <Pressable
+  style={[styles.button, styles.inspectButton]}
+  onPress={() =>
+    router.push({
+      pathname: "/vehicles/inspection/create",
+      params: {
+        vehicleId: vehicle.id,
+      },
+    })
+  }
+>
+  <Ionicons
+    name="clipboard-outline"
+    size={22}
+    color="white"
+  />
 
+  <Text style={styles.buttonText}>
+    Realizar inspección
+  </Text>
+</Pressable>
       <Pressable
         style={[styles.button, styles.editButton]}
         onPress={() =>
@@ -261,6 +351,9 @@ const styles = StyleSheet.create({
   editButton: {
     backgroundColor: "#005A9C",
   },
+  inspectButton: {
+  backgroundColor: "#16A34A",
+},
 
   deleteButton: {
     backgroundColor: "#DC2626",
@@ -280,4 +373,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     resizeMode: "cover",
   },
+  inspectionItem: {
+  paddingVertical: 12,
+  borderBottomWidth: 1,
+  borderBottomColor: "#E5E5E5",
+},
+
+inspectionDate: {
+  fontWeight: "700",
+  fontSize: 16,
+  marginBottom: 5,
+},
 });

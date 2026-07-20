@@ -10,33 +10,40 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { addTask } from "../src/utils/tasksStorage";
+import { addTask } from "../src/services/task.service";
+
 export default function AddTaskScreen() {
-  const [taskType, setTaskType] = useState("Cambio de aceite");
-  const [vehicle, setVehicle] = useState("");
-  const [date, setDate] = useState("");
-  const [priority, setPriority] = useState("Media");
-  const [notes, setNotes] = useState("");
-
+  const [titulo, setTitulo] = useState("");
+const [descripcion, setDescripcion] = useState("");
+const [asignadoA, setAsignadoA] = useState("");
+const [fechaLimite, setFechaLimite] = useState("");
+const [prioridad, setPrioridad] = useState<"alta" | "media" | "baja">("media");
   async function saveTask() {
-  if (!vehicle.trim()) {
-    Alert.alert("Error", "Ingrese el vehículo.");
-    return;
-  }
+  if (!titulo.trim()) {
+  Alert.alert("Error", "Ingrese un título.");
+  return;
+}
 
-  if (!date.trim()) {
-    Alert.alert("Error", "Ingrese la fecha.");
-    return;
-  }
+if (!asignadoA.trim()) {
+  Alert.alert("Error", "Ingrese el responsable.");
+  return;
+}
+
+if (!fechaLimite.trim()) {
+  Alert.alert("Error", "Ingrese la fecha límite.");
+  return;
+}
 
   await addTask({
-    id: Date.now().toString(),
-    taskType,
-    vehicle,
-    date,
-    priority,
-    notes,
-  });
+  id: Date.now().toString(),
+  titulo,
+  descripcion,
+  asignadoA,
+  fechaCreacion: new Date(),
+  fechaLimite: new Date(fechaLimite),
+  prioridad,
+  estado: "pendiente",
+});
 
   Alert.alert("Éxito", "Tarea creada correctamente.", [
     {
@@ -53,62 +60,55 @@ export default function AddTaskScreen() {
     >
       <Text style={styles.title}>Nueva tarea</Text>
 
-      <Text style={styles.label}>Tipo de tarea</Text>
+      
 
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={taskType}
-          onValueChange={(itemValue) => setTaskType(itemValue)}
-        >
-          <Picker.Item label="Cambio de aceite" value="Cambio de aceite" />
-          <Picker.Item label="Revisión técnica" value="Revisión técnica" />
-          <Picker.Item label="Inspección" value="Inspección" />
-          <Picker.Item label="Mantención" value="Mantención" />
-          <Picker.Item label="Cambio de neumáticos" value="Cambio de neumáticos" />
-          <Picker.Item label="Otro" value="Otro" />
-        </Picker>
-      </View>
+      <Text style={styles.label}>Título</Text>
 
-      <Text style={styles.label}>Vehículo</Text>
+<TextInput
+  style={styles.input}
+  placeholder="Ej: Cambio de aceite"
+  value={titulo}
+  onChangeText={setTitulo}
+/>
+<Text style={styles.label}>Descripción</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Ej: Camión 01"
-        value={vehicle}
-        onChangeText={setVehicle}
-      />
+<TextInput
+  style={[styles.input, { height: 120 }]}
+  multiline
+  value={descripcion}
+  onChangeText={setDescripcion}
+/>
+<Text style={styles.label}>Asignado a</Text>
+
+<TextInput
+  style={styles.input}
+  placeholder="Ej: Pedro González"
+  value={asignadoA}
+  onChangeText={setAsignadoA}
+/>
 
       <Text style={styles.label}>Fecha de vencimiento</Text>
 
       <TextInput
-        style={styles.input}
-        placeholder="Ej: 25/07/2026"
-        value={date}
-        onChangeText={setDate}
-      />
+  style={styles.input}
+  placeholder="2026-07-25"
+  value={fechaLimite}
+  onChangeText={setFechaLimite}
+/>
 
       <Text style={styles.label}>Prioridad</Text>
 
       <View style={styles.pickerContainer}>
         <Picker
-          selectedValue={priority}
-          onValueChange={(itemValue) => setPriority(itemValue)}
-        >
-          <Picker.Item label="Alta" value="Alta" />
-          <Picker.Item label="Media" value="Media" />
-          <Picker.Item label="Baja" value="Baja" />
+selectedValue={prioridad}
+onValueChange={(itemValue) => setPrioridad(itemValue)}        >
+          <Picker.Item label="Alta" value="alta" />
+<Picker.Item label="Media" value="media" />
+<Picker.Item label="Baja" value="baja" />
         </Picker>
       </View>
 
-      <Text style={styles.label}>Observaciones</Text>
-
-      <TextInput
-        style={[styles.input, { height: 120 }]}
-        placeholder="Escriba observaciones..."
-        multiline
-        value={notes}
-        onChangeText={setNotes}
-      />
+      
 
       <Pressable style={styles.button} onPress={saveTask}>
         <Text style={styles.buttonText}>Guardar tarea</Text>

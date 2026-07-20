@@ -4,16 +4,16 @@ import ReportCard from "../../src/components/reports/ReportCard";
 import ReportSection from "../../src/components/reports/ReportSection";
 
 import { getVehicles } from "../../src/services/vehicle.service";
-import { getMaintenances } from "../../src/services/maintenance.service";
-import { getMembers } from "../../src/services/member.service";import { getInspections } from "../../src/services/inspection.service";
+import { getMembers } from "../../src/services/member.service";
+import { getTasks } from "../../src/services/task.service";
+import { getInspections } from "../../src/services/inspection.service";
 import PrimaryButton from "../../src/components/ui/PrimaryButton";
 import { generateReportPDF } from "../../src/services/pdf.service";
 export default function ReportsScreen() {
   const vehicles = getVehicles();
-  const maintenances = getMaintenances();
   const members = getMembers();
   const inspections = getInspections();
-
+const tasks = getTasks();
   const pendingInspections = inspections
     .filter((i) => i.estado === "Pendiente")
     .map((i) => ({
@@ -21,13 +21,15 @@ export default function ReportsScreen() {
       subtitle: `${i.fecha} • Vehículo ${i.vehicleId}`,
     }));
 
-  const recentMaintenances = maintenances
-    .slice(-5)
-    .reverse()
-    .map((m) => ({
-      title: m.tipo,
-      subtitle: `${m.fecha} • Vehículo ${m.vehicleId}`,
-    }));
+  const recentTasks = tasks
+  .slice(-5)
+  .reverse()
+  .map((task) => ({
+    title: task.titulo,
+    subtitle: `${task.asignadoA} • ${new Date(
+      task.fechaLimite
+    ).toLocaleDateString()}`,
+  }));
 
   return (
     <ScrollView
@@ -43,9 +45,9 @@ export default function ReportsScreen() {
         />
 
         <ReportCard
-          title="Mantenimientos"
-          value={maintenances.length}
-        />
+  title="Tareas"
+  value={tasks.length}
+/>
 
         <ReportCard
           title="Inspecciones"
@@ -64,9 +66,9 @@ export default function ReportsScreen() {
       />
 
       <ReportSection
-        title="🔧 Últimos Mantenimientos"
-        items={recentMaintenances}
-      />
+  title="📋 Últimas Tareas"
+  items={recentTasks}
+/>
       <View style={{ marginTop: 30 }}>
   <PrimaryButton
     title="📄 Generar Reporte PDF"

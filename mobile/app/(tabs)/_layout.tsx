@@ -71,6 +71,19 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+  name="tasks"
+  options={{
+    title: "Tareas",
+    tabBarIcon: ({ color, size }) => (
+      <Ionicons
+        name="clipboard-outline"
+        size={size}
+        color={color}
+      />
+    ),
+  }}
+/>
     </Tabs>
   );
 }

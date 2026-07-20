@@ -3,7 +3,7 @@ import * as Sharing from "expo-sharing";
 import { Asset } from "expo-asset";
 
 import { getVehicles } from "./vehicle.service";
-import { getMaintenances } from "./maintenance.service";
+import { getTasks } from "./task.service";
 import { getMembers } from "./member.service";
 import { getInspections } from "./inspection.service";
 
@@ -11,7 +11,7 @@ import { buildReportHTML } from "../templates/reportTemplate";
 
 export async function generateReportPDF() {
   const vehicles = getVehicles();
-  const maintenances = getMaintenances();
+  const tasks = getTasks();
   const inspections = getInspections();
   const members = getMembers();
 
@@ -26,7 +26,7 @@ export async function generateReportPDF() {
 
   const html = buildReportHTML(
   vehicles,
-  maintenances,
+  tasks,
   inspections,
   members
 );

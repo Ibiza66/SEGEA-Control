@@ -126,17 +126,7 @@ useFocusEffect(
   }}
 />
 
-<DashboardCard
-  title="Mantenciones"
-  description="Programa y controla mantenciones"
-  icon="build"
-  iconColor="#F57C00"
-  iconBackground="#FFF3E8"
-  onPress={async () => {
-  await Haptics.selectionAsync();
-  router.push("/maintenance" as any);
-}}
-/>
+
 
 <DashboardCard
   title="Equipos"
@@ -147,6 +137,17 @@ useFocusEffect(
   onPress={async () => {
     await Haptics.selectionAsync();
     router.push("/equipment" as any);
+  }}
+/>
+<DashboardCard
+  title="Tareas"
+  description="Gestiona tareas de mantenimiento"
+  icon="clipboard"
+  iconColor="#7B1FA2"
+  iconBackground="#F3E8FF"
+  onPress={async () => {
+    await Haptics.selectionAsync();
+    router.push("/tasks" as any);
   }}
 />
 <DashboardCard

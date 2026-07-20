@@ -191,10 +191,18 @@ useFocusEffect(
     </Text>
   ) : (
     inspections.map((inspection) => (
-      <View
-        key={inspection.id}
-        style={styles.inspectionItem}
-      >
+  <Pressable
+    key={inspection.id}
+    style={styles.inspectionItem}
+    onPress={() =>
+      router.push({
+        pathname: "/equipment/inspection/details",
+        params: {
+          inspectionId: inspection.id,
+        },
+      })
+    }
+  >
         <Text style={styles.inspectionDate}>
           {inspection.fecha}
         </Text>
@@ -206,7 +214,7 @@ useFocusEffect(
         <Text>
           Estado: {inspection.estado}
         </Text>
-      </View>
+      </Pressable>
     ))
   )}
 </View>

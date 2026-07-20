@@ -1,11 +1,11 @@
 import { Vehicle } from "../types/Vehicle";
-import { Maintenance } from "../types/Maintenance";
+import { Task } from "../types/Task";
 import { Inspection } from "../types/Inspection";
 import { Member } from "../types/Member";
 
 export function buildReportHTML(
   vehicles: Vehicle[],
-  maintenances: Maintenance[],
+  tasks: Task[],
   inspections: Inspection[],
   members: Member[]){
   const pendientes = inspections.filter(
@@ -249,7 +249,7 @@ margin-bottom:25px;
 <strong>Resumen Ejecutivo</strong><br><br>
 
 Este informe presenta el estado actual de la flota registrada
-en el sistema SEGEA, incluyendo vehículos, mantenimientos,
+en el sistema SEGEA, incluyendo vehículos, tareas,
 inspecciones y personal asociado.
 
 </div>
@@ -272,8 +272,8 @@ inspecciones y personal asociado.
 <td style="width:50%; border:none;">
 
 <div class="card">
-<div class="card-title">🔧 Mantenimientos</div>
-<div class="card-value">${maintenances.length}</div>
+<div class="card-title">📋 Tareas</div>
+<div class="card-value">${tasks.length}</div>
 </div>
 
 </td>
@@ -419,51 +419,35 @@ ${Number(v.kilometraje).toLocaleString("es-CL")} km
 
 <div class="page-break"></div>
 
-<h2>Mantenimientos</h2>
+<h2>Tareas</h2>
 
 <table>
 
 <tr>
 
-<th>Vehículo</th>
 
-<th>Tipo</th>
-
-<th>Fecha</th>
-
-<th>Km</th>
-
-<th>Costo</th>
-
+<th>Título</th>
+<th>Asignado a</th>
+<th>Fecha límite</th>
+<th>Prioridad</th>
+<th>Estado</th>
 </tr>
 
-${maintenances
-  .map((m) => {
-    const vehicle = getVehicle(m.vehicleId);
-
-    return `
+${tasks
+  .map((t) => `
 <tr>
-
-<td>
-${vehicle ? `${vehicle.marca} ${vehicle.modelo}<br/>${vehicle.patente}` : "No encontrado"}
-</td>
-
-<td>${m.tipo}</td>
-
-<td>${m.fecha}</td>
-
-<td class="center">
-${Number(m.kilometraje).toLocaleString("es-CL")} km
-</td>
-
-<td class="center">
-$${Number(m.costo).toLocaleString("es-CL")}
-</td>
+<td>${t.titulo}</td>
+<td>${t.asignadoA}</td>
+<td>${new Date(t.fechaLimite).toLocaleDateString("es-CL")}</td>
+<td>${t.prioridad}</td>
+<td>${t.estado}</td>
+</tr>
+`)
+.join("")}
 
 </tr>
-`;
-  })
-  .join("")}
+
+
 
 </table>
 
