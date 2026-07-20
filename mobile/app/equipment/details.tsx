@@ -164,22 +164,42 @@ export default function EquipmentDetailsScreen() {
     {equipment.observaciones || "Sin observaciones."}
   </Text>
 </View>
+<Pressable
+  style={[styles.button, styles.inspectButton]}
+  onPress={() =>
+    router.push({
+      pathname: "/equipment/inspection/create",
+      params: {
+        equipmentId: equipment.id,
+      },
+    })
+  }
+>
+  <Ionicons
+    name="clipboard-outline"
+    size={22}
+    color="white"
+  />
 
-      <Pressable
-        style={[styles.button, styles.editButton]}
-        onPress={() =>
-          router.push({
-            pathname: "/equipment/edit",
-            params: {
-              id: equipment.id,
-            },
-          })
-        }
-      >
-        <Ionicons name="create-outline" size={22} color="white" />
-        <Text style={styles.buttonText}>Editar equipo</Text>
-      </Pressable>
+  <Text style={styles.buttonText}>
+    Realizar inspección
+  </Text>
+</Pressable>
 
+<Pressable
+  style={[styles.button, styles.editButton]}
+  onPress={() =>
+    router.push({
+      pathname: "/equipment/edit",
+      params: {
+        id: equipment.id,
+      },
+    })
+  }
+>
+  <Ionicons name="create-outline" size={22} color="white" />
+  <Text style={styles.buttonText}>Editar equipo</Text>
+</Pressable>
       <Pressable
         style={[styles.button, styles.deleteButton]}
         onPress={eliminarEquipo}
@@ -318,4 +338,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     resizeMode: "cover",
   },
+  inspectButton: {
+  backgroundColor: "#16A34A",
+},
+  
 });
