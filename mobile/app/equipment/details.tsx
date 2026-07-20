@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import {
   Alert,
   Image,
@@ -9,16 +9,39 @@ import {
   Text,
   View,
 } from "react-native";
-
+import { useCallback, useState } from "react";
 import {
   deleteEquipment,
   getEquipmentById,
 } from "../../src/services/equipment.service";
-
+import {
+  getEquipmentInspectionsByEquipmentId,
+  loadEquipmentInspections,
+} from "../../src/services/equipmentInspection.service";
 export default function EquipmentDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
  const equipment = getEquipmentById(id);
+ const [inspections, setInspections] = useState(
+  equipment
+    ? getEquipmentInspectionsByEquipmentId(equipment.id)
+    : []
+);
+useFocusEffect(
+  useCallback(() => {
+    async function cargar() {
+      await loadEquipmentInspections();
+
+      if (equipment) {
+        setInspections(
+          getEquipmentInspectionsByEquipmentId(equipment.id)
+        );
+      }
+    }
+
+    cargar();
+  }, [equipment])
+);
   const estadoColor =
   equipment?.estado === "Operativo"
     ? "#16A34A"
@@ -156,6 +179,36 @@ export default function EquipmentDetailsScreen() {
     label="Vencimiento"
     value={equipment.vencimientoCertificacion.toLocaleDateString("es-CL")}
   />
+</View>
+<Text style={styles.sectionTitle}>
+  Historial de inspecciones
+</Text>
+
+<View style={styles.infoCard}>
+  {inspections.length === 0 ? (
+    <Text style={styles.observation}>
+      Este equipo aún no tiene inspecciones.
+    </Text>
+  ) : (
+    inspections.map((inspection) => (
+      <View
+        key={inspection.id}
+        style={styles.inspectionItem}
+      >
+        <Text style={styles.inspectionDate}>
+          {inspection.fecha}
+        </Text>
+
+        <Text>
+          Inspector: {inspection.inspector}
+        </Text>
+
+        <Text>
+          Estado: {inspection.estado}
+        </Text>
+      </View>
+    ))
+  )}
 </View>
 <Text style={styles.sectionTitle}>Observaciones</Text>
 
@@ -340,6 +393,16 @@ const styles = StyleSheet.create({
   },
   inspectButton: {
   backgroundColor: "#16A34A",
+},inspectionItem: {
+  paddingVertical: 12,
+  borderBottomWidth: 1,
+  borderBottomColor: "#E5E5E5",
+},
+
+inspectionDate: {
+  fontWeight: "700",
+  fontSize: 16,
+  marginBottom: 5,
 },
   
 });

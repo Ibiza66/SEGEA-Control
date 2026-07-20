@@ -74,7 +74,10 @@ export default function CreateInspectionScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+  style={styles.container}
+  contentContainerStyle={{ paddingBottom: 80 }}
+>
       <Text style={styles.title}>Nueva inspección</Text>
 
       <Text style={styles.name}>{equipment.nombre}</Text>
