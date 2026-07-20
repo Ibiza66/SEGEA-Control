@@ -143,8 +143,8 @@ useFocusEffect(
   title="Tareas"
   description="Gestiona tareas de mantenimiento"
   icon="clipboard"
-  iconColor="#7B1FA2"
-  iconBackground="#F3E8FF"
+   iconColor="#F57C00"
+  iconBackground="#FFF3E8"
   onPress={async () => {
     await Haptics.selectionAsync();
     router.push("/tasks" as any);
