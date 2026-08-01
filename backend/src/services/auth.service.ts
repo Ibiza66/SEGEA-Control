@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { User, IUser, UserRole } from "../models/User.js";
 import { AppError } from "../errors/AppError.js";
+import { generateToken } from "../utils/jwt.js";
 
 interface RegisterUserDTO {
   nombre: string;
@@ -33,4 +34,34 @@ export async function registerUser(data: RegisterUserDTO): Promise<IUser> {
   });
 
   return user;
+}
+interface LoginUserDTO {
+  correo: string;
+  password: string;
+}
+
+export async function loginUser(data: LoginUserDTO) {
+  const { correo, password } = data;
+
+  // Buscar usuario
+  const user = await User.findOne({ correo });
+
+  if (!user) {
+    throw new AppError("Correo o contraseña incorrectos", 401);
+  }
+
+  // Comparar contraseña
+  const validPassword = await bcrypt.compare(password, user.password);
+
+  if (!validPassword) {
+    throw new AppError("Correo o contraseña incorrectos", 401);
+  }
+
+  // Generar JWT
+  const token = generateToken(user.id, user.role);
+
+  return {
+    token,
+    user,
+  };
 }
