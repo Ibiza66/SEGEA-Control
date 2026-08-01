@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
+import vehicleRoutes from "./routes/vehicle.routes.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 const app = express();
 
@@ -15,5 +16,6 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/vehicles", vehicleRoutes);
 app.use(errorMiddleware);
 export default app;
