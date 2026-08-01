@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/auth.service.js";
+import { AuthRequest } from "../middleware/auth.middleware.js";
 
 export async function register(req: Request, res: Response) {
   try {
@@ -28,4 +29,10 @@ export async function login(req: Request, res: Response) {
       message: error.message || "Error interno del servidor",
     });
   }
+}
+export async function profile(req: AuthRequest, res: Response) {
+  res.status(200).json({
+    message: "Usuario autenticado",
+    user: req.user,
+  });
 }
