@@ -33,3 +33,53 @@ export async function createVehicle(
 export async function getVehicles(): Promise<IVehicle[]> {
   return await Vehicle.find().sort({ createdAt: -1 });
 }
+export async function getVehicleById(id: string): Promise<IVehicle> {
+  const vehicle = await Vehicle.findById(id);
+
+  if (!vehicle) {
+    throw new AppError("Vehículo no encontrado", 404);
+  }
+
+  return vehicle;
+}
+export async function updateVehicle(
+  id: string,
+  data: Partial<CreateVehicleDTO>
+): Promise<IVehicle> {
+  if (data.patente) {
+    data.patente = data.patente.toUpperCase();
+
+    const existingVehicle = await Vehicle.findOne({
+      patente: data.patente,
+      _id: { $ne: id },
+    });
+
+    if (existingVehicle) {
+      throw new AppError("La patente ya está registrada", 409);
+    }
+  }
+
+  const vehicle = await Vehicle.findByIdAndUpdate(
+    id,
+    data,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!vehicle) {
+    throw new AppError("Vehículo no encontrado", 404);
+  }
+
+  return vehicle;
+}
+export async function deleteVehicle(id: string): Promise<void> {
+  const vehicle = await Vehicle.findById(id);
+
+  if (!vehicle) {
+    throw new AppError("Vehículo no encontrado", 404);
+  }
+
+  await Vehicle.findByIdAndDelete(id);
+}
