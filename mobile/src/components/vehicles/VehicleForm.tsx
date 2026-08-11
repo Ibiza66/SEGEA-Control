@@ -21,6 +21,7 @@ import { Vehicle, VehicleStatus } from "../../types/Vehicle";
 import AppInput from "../ui/AppInput";
 import AppSelect from "../ui/AppSelect";
 import PrimaryButton from "../ui/PrimaryButton";
+import { Theme } from "@/src/theme/theme";
 
 type VehicleFormProps = {
   mode: "create" | "edit";
@@ -314,61 +315,59 @@ export default function VehicleForm({ mode, vehicle }: VehicleFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#F5F7FA",
-  },
+  flex: 1,
+  backgroundColor: "transparent",
+},
 
   content: {
-    padding: 20,
-    paddingTop: 30,
-    paddingBottom: 60,
+    padding: Theme.spacing.lg,
+paddingTop: Theme.spacing.xl,
+paddingBottom: Theme.spacing.xxxl,
   },
 
   title: {
-    fontSize: 30,
-    fontWeight: "700",
-    color: "#222",
-    marginBottom: 30,
-  },
+  fontSize: Theme.typography.screenTitle,
+  fontWeight: "700",
+  color: Theme.colors.text,
+  marginBottom: Theme.spacing.xl,
+},
 
   label: {
-    fontSize: 15,
-    fontWeight: "600",
-    marginBottom: 8,
-    color: "#333",
-  },
-
+  fontSize: Theme.typography.label,
+  fontWeight: "600",
+  color: Theme.colors.text,
+  marginBottom: Theme.spacing.xs,
+},
   dateButton: {
-    backgroundColor: "#FFF",
+    backgroundColor: Theme.colors.surface,
     borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 20,
+    borderColor: Theme.colors.border,
+    borderRadius: Theme.radius.md,
+padding: Theme.spacing.md,
+marginBottom: Theme.spacing.lg,
   },
 
   buttonContainer: {
-    marginTop: 15,
-    marginBottom: 40,
-  },
+  marginTop: Theme.spacing.lg,
+  marginBottom: Theme.spacing.xxl,
+},
   imageButton: {
-    backgroundColor: "#005A9C",
-    padding: 14,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 15,
+    backgroundColor:Theme.colors.primary,
+   padding: Theme.spacing.md,
+borderRadius: Theme.radius.md,
+marginBottom: Theme.spacing.md,
   },
 
   imageButtonText: {
-    color: "white",
+    color: Theme.colors.surface,
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: Theme.typography.body,
   },
 
   preview: {
-    width: "100%",
-    height: 220,
-    borderRadius: 15,
-    marginBottom: 20,
-  },
+  width: "100%",
+  height: 220,
+  borderRadius: Theme.radius.lg,
+  marginBottom: Theme.spacing.lg,
+},
 });

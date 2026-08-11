@@ -1,7 +1,8 @@
-import { useLocalSearchParams } from "expo-router";
-import { Text, View, StyleSheet,Button } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { Text, View, StyleSheet } from "react-native";
 
 import GradientBackground from "@/src/components/layout/GradientBackground";
+import PrimaryButton from "@/src/components/ui/PrimaryButton";
 import { Theme } from "@/src/theme/theme";
 import { vehicles } from "@/src/data/vehicles";
 
@@ -53,12 +54,17 @@ if (!vehicle) {
         {vehicle.mantencion.toLocaleDateString("es-CL")}
       </Text>
 
-      <Button
-        title="Iniciar Check-In"
-        onPress={() => {
-          console.log("Iniciar inspección");
-        }}
-      />
+      <PrimaryButton
+  title="Iniciar Check-In"
+  onPress={() => {
+    router.push({
+  pathname: "/check-in/checklist/vehicle",
+  params: {
+    id: vehicle.id,
+  },
+} as any);
+  }}
+/>
 
     </View>
 
