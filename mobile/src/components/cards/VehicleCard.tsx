@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { VehicleStatus } from "../../types/Vehicle";
+import { Theme } from "@/src/theme/theme";
 
 type Props = {
   patente: string;
   marca: string;
   modelo: string;
   anio: number;
+  kilometraje: number;
   estado: VehicleStatus;
   foto?: string;
   onPress: () => void;
@@ -17,16 +19,17 @@ export default function VehicleCard({
   marca,
   modelo,
   anio,
+  kilometraje,
   estado,
   foto,
   onPress,
 }: Props) {
   const estadoColor =
-    estado === "Activo"
-      ? "#16A34A"
-      : estado === "Mantenimiento"
-        ? "#F59E0B"
-        : "#DC2626";
+  estado === "Activo"
+    ? Theme.colors.success
+    : estado === "Mantenimiento"
+    ? Theme.colors.warning
+    : Theme.colors.danger;
 
   return (
     <Pressable
@@ -41,7 +44,7 @@ export default function VehicleCard({
           <Ionicons
             name="car-sport"
             size={34}
-            color="#005A9C"
+            color={Theme.colors.primary}
             style={styles.icon}
           />
         )}
@@ -53,7 +56,9 @@ export default function VehicleCard({
             {marca} {modelo}
           </Text>
 
-          <Text style={styles.anio}>{anio}</Text>
+          <Text style={styles.anio}>
+  Año {anio} • {kilometraje.toLocaleString()} km
+</Text>
         </View>
       </View>
 
@@ -66,7 +71,7 @@ export default function VehicleCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFF",
+    backgroundColor: Theme.colors.surface,
     borderRadius: 18,
     padding: 16,
     marginBottom: 15,
@@ -75,15 +80,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
 
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-
-    elevation: 4,
+    ...Theme.shadows.md,
   },
 
   left: {
@@ -101,21 +98,21 @@ const styles = StyleSheet.create({
   },
 
   patente: {
-    fontSize: 20,
+    fontSize: Theme.typography.cardTitle,
     fontWeight: "700",
-    color: "#111827",
+    color: Theme.colors.text,
   },
 
   modelo: {
     marginTop: 4,
-    fontSize: 16,
-    color: "#444",
+    fontSize: Theme.typography.body,
+    color: Theme.colors.textSecondary,
   },
 
   anio: {
     marginTop: 3,
-    fontSize: 15,
-    color: "#777",
+    fontSize: Theme.typography.bodySmall,
+    color: Theme.colors.textSecondary,
   },
 
   badge: {
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: "#FFF",
     fontWeight: "600",
-    fontSize: 12,
+    fontSize: Theme.typography.overline
   },
   image: {
     width: 70,

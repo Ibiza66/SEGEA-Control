@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Theme } from "@/src/theme/theme";
 
 type Props = {
   title: string;
@@ -20,7 +21,7 @@ export default function DashboardCard({
   return (
     <Pressable
       onPress={onPress}
-      android_ripple={{ color: "#E3F2FD" }}
+      android_ripple={{ color: Theme.colors.primaryLight }}
       style={({ pressed }) => [
         styles.card,
         pressed && styles.cardPressed,
@@ -35,7 +36,7 @@ export default function DashboardCard({
 >
           <Ionicons
   name={icon}
-  size={22}
+  size={Theme.iconSize.lg}
   color={iconColor}
 />
         </View>
@@ -52,10 +53,10 @@ export default function DashboardCard({
       </View>
 
       <Ionicons
-        name="chevron-forward"
-        size={24}
-        color="#005A9C"
-      />
+  name="chevron-forward"
+  size={Theme.iconSize.md}
+  color={Theme.colors.primary}
+/>
     </Pressable>
   );
 }
@@ -65,31 +66,23 @@ const styles = StyleSheet.create({
     width: "100%",
     minHeight: 88,
 
-    backgroundColor: "#FFF",
-    borderRadius: 18,
+    backgroundColor: Theme.colors.surface,
+    borderRadius: Theme.radius.lg,
 
-    paddingHorizontal: 18,
-    paddingVertical: 14,
+   paddingHorizontal: Theme.spacing.lg,
+    paddingVertical: Theme.spacing.md,
 
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
 
-    marginBottom: 14,
+    marginBottom: Theme.spacing.md,
 
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-
-    elevation: 3,
+    ...Theme.shadows.md,
   },
 
   cardPressed: {
-    transform: [{ scale: 0.98 }],
+    transform: [{ scale: 0.985 }],
   },
 
   left: {
@@ -102,12 +95,12 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: "#EAF4FF",
+  
 
     justifyContent: "center",
     alignItems: "center",
 
-    marginRight: 14,
+    marginRight: Theme.spacing.md,
   },
 
   textContainer: {
@@ -115,14 +108,16 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 18,
+    fontSize: Theme.typography.cardTitle,
     fontWeight: "700",
-    color: "#1E293B",
-  },
+    color: Theme.colors.text,
+},
 
-  description: {
-    marginTop: 4,
-    fontSize: 14,
-    color: "#64748B",
-  },
+ description: {
+    marginTop: Theme.spacing.xs,
+    fontSize: Theme.typography.caption,
+    color: Theme.colors.textSecondary,
+
+    lineHeight: 20,
+},
 });
