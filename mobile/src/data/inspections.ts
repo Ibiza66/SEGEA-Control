@@ -8,6 +8,7 @@ export const inspections: Inspection[] = [
     fecha: "18/07/2026",
     estado: "Aprobada",
     observaciones: "Vehículo en buenas condiciones.",
+    checklist: [],
   },
   {
     id: "2",
@@ -16,5 +17,6 @@ export const inspections: Inspection[] = [
     fecha: "19/07/2026",
     estado: "Pendiente",
     observaciones: "Falta revisar sistema de frenos.",
+    checklist: [],
   },
 ];

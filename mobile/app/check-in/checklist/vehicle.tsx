@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,9 +10,13 @@ import {
 import GradientBackground from "@/src/components/layout/GradientBackground";
 import PrimaryButton from "@/src/components/ui/PrimaryButton";
 import { Theme } from "@/src/theme/theme";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { vehicles } from "@/src/data/vehicles";
 import ChecklistItem from "@/src/components/checklist/ChecklistItem";
+import * as ImagePicker from "expo-image-picker";
+import { addInspection } from "@/src/services/inspection.service";
+import { Inspection } from "@/src/types/Inspection";
+
 const items = [
   "Neumáticos",
   "Luces",
@@ -38,6 +43,9 @@ const vehicle = vehicles.find(
 const [observations, setObservations] = useState<string[]>(
   items.map(() => "")
 );
+const [photos, setPhotos] = useState<string[]>(
+  items.map(() => "")
+);
 
   function toggle(index: number, value: boolean) {
   const copy = [...checked];
@@ -48,6 +56,27 @@ function updateObservation(index: number, text: string) {
   const copy = [...observations];
   copy[index] = text;
   setObservations(copy);
+}
+async function addPhoto(index: number) {
+  const permission =
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+  if (!permission.granted) {
+    return;
+  }
+
+  const result =
+    await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+  if (!result.canceled) {
+    const copy = [...photos];
+    copy[index] = result.assets[0].uri;
+    setPhotos(copy);
+  }
 }
   return (
     <GradientBackground>
@@ -94,15 +123,69 @@ function updateObservation(index: number, text: string) {
     updateObservation(index, text)
   }
   onChange={(value) => toggle(index, value)}
+  photo={photos[index]}
+  onAddPhoto={() => addPhoto(index)}
 />
 ))}
 
         <PrimaryButton
-          title="Finalizar Checklist"
-          onPress={() => {
-            console.log(checked);
-          }}
-        />
+  title="Finalizar Checklist"
+  onPress={async () => {
+    // Revisar que todos los puntos estén respondidos
+    if (checked.includes(null)) {
+      Alert.alert(
+        "Checklist incompleto",
+        "Debe revisar todos los puntos."
+      );
+      return;
+    }
+
+    // Revisar que todos los "No cumple" tengan observación
+    for (let i = 0; i < checked.length; i++) {
+      if (
+        checked[i] === false &&
+        observations[i].trim() === ""
+      ) {
+        Alert.alert(
+          "Observación requerida",
+          `Debe ingresar una observación para "${items[i]}".`
+        );
+        return;
+      }
+    }
+
+    const inspection: Inspection = {
+  id: `INSP-${Date.now()}`,
+  vehicleId: vehicle!.id,
+  inspector: "Inspector",
+  fecha: new Date().toISOString(),
+  estado: "Pendiente",
+  observaciones: "",
+
+  checklist: items.map((item, index) => ({
+    item,
+    cumple: checked[index]!,
+    observacion: observations[index],
+    foto: photos[index],
+  })),
+};
+
+await addInspection(inspection);
+
+Alert.alert(
+  "Éxito",
+  "Checklist guardado correctamente.",
+  [
+    {
+      text: "OK",
+      onPress: () => {
+        router.replace("/inspections");
+      },
+    },
+  ]
+);
+  }}
+/>
       </ScrollView>
     </GradientBackground>
   );

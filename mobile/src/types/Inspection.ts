@@ -3,6 +3,13 @@ export type InspectionStatus =
   | "Aprobada"
   | "Rechazada";
 
+export interface ChecklistResult {
+  item: string;
+  cumple: boolean;
+  observacion: string;
+  foto?: string;
+}
+
 export interface Inspection {
   id: string;
   vehicleId: string;
@@ -10,4 +17,6 @@ export interface Inspection {
   fecha: string;
   estado: InspectionStatus;
   observaciones: string;
+
+  checklist: ChecklistResult[];
 }

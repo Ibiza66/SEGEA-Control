@@ -15,6 +15,9 @@ type Props = {
   observation: string;
   onObservationChange: (text: string) => void;
   onChange: (value: boolean) => void;
+
+  photo?: string;
+  onAddPhoto?: () => void;
 };
 
 export default function ChecklistItem({
@@ -23,6 +26,8 @@ export default function ChecklistItem({
   observation,
   onObservationChange,
   onChange,
+  photo,
+  onAddPhoto,
 }: Props) {
   return (
     <View style={styles.card}>
@@ -78,13 +83,36 @@ export default function ChecklistItem({
 
       </View>
       {value === false && (
-  <TextInput
-    style={styles.input}
-    placeholder="Escriba la observación..."
-    value={observation}
-    onChangeText={onObservationChange}
-    multiline
-  />
+  <>
+    <TextInput
+      style={styles.input}
+      placeholder="Escriba la observación..."
+      value={observation}
+      onChangeText={onObservationChange}
+      multiline
+    />
+
+    <Pressable
+      style={styles.photoButton}
+      onPress={onAddPhoto}
+    >
+      <Ionicons
+        name="camera"
+        size={20}
+        color="#FFF"
+      />
+
+      <Text style={styles.photoButtonText}>
+        Agregar fotografía
+      </Text>
+    </Pressable>
+
+    {photo && (
+      <Text style={styles.photoAdded}>
+        ✓ Fotografía agregada
+      </Text>
+    )}
+  </>
 )}
     </View>
     
@@ -152,5 +180,27 @@ const styles = StyleSheet.create({
   minHeight: 80,
   color: Theme.colors.text,
   textAlignVertical: "top",
+},
+photoButton: {
+  marginTop: Theme.spacing.md,
+  backgroundColor: Theme.colors.primary,
+  borderRadius: Theme.radius.md,
+  padding: Theme.spacing.md,
+
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+photoButtonText: {
+  color: "#FFF",
+  fontWeight: "600",
+  marginLeft: Theme.spacing.sm,
+},
+
+photoAdded: {
+  marginTop: Theme.spacing.sm,
+  color: Theme.colors.success,
+  fontWeight: "600",
 },
 });

@@ -14,17 +14,25 @@ import AppInput from "../../src/components/ui/AppInput";
 import InspectionCard from "../../src/components/cards/InspectionCard";
 
 import { Inspection } from "../../src/types/Inspection";
-import { getInspections } from "../../src/services/inspection.service";
+import {
+  getInspections,
+  loadInspections,
+} from "../../src/services/inspection.service";
 
 export default function InspectionsScreen() {
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [search, setSearch] = useState("");
 
   useFocusEffect(
-    useCallback(() => {
+  useCallback(() => {
+    const cargarInspecciones = async () => {
+      await loadInspections();
       setInspections([...getInspections()]);
-    }, [])
-  );
+    };
+
+    cargarInspecciones();
+  }, [])
+);
 
   const filtered = inspections.filter((inspection) => {
     const text = search.toLowerCase();
