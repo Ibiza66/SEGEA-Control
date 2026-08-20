@@ -179,7 +179,7 @@ Alert.alert(
     {
       text: "OK",
       onPress: () => {
-        router.replace("/inspections");
+        router.back();
       },
     },
   ]
