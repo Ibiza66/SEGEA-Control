@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
+
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useCallback, useState } from "react";
+import { vehicles } from "../../src/data/vehicles";
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -58,31 +58,32 @@ export default function InspectionsScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
       >
-        {filtered.map((inspection) => (
-          <InspectionCard
-            key={inspection.id}
-            inspector={inspection.inspector}
-            fecha={inspection.fecha}
-            estado={inspection.estado}
-            onPress={() =>
-              router.push(`/inspections/${inspection.id}` as any)
-            }
-          />
-        ))}
+        {filtered.map((inspection) => {
+  const vehicle = vehicles.find(
+    (v) => v.id === inspection.vehicleId
+  );
+
+  return (
+    <InspectionCard
+      key={inspection.id}
+      vehicle={
+        vehicle
+          ? `${vehicle.marca} ${vehicle.modelo}`
+          : "Vehículo"
+      }
+      plate={vehicle ? vehicle.patente : "-"}
+      inspector={inspection.inspector}
+      fecha={inspection.fecha}
+      estado={inspection.estado}
+      onPress={() =>
+        router.push(`/inspections/${inspection.id}` as any)
+      }
+    />
+  );
+})}
       </ScrollView>
 
-      <Pressable
-        style={styles.fab}
-        onPress={() =>
-          router.push("/inspections/create" as any)
-        }
-      >
-        <Ionicons
-          name="add"
-          size={34}
-          color="white"
-        />
-      </Pressable>
+      
     </View>
   );
 }
@@ -104,16 +105,5 @@ const styles = StyleSheet.create({
     paddingBottom: 140,
   },
 
-  fab: {
-    position: "absolute",
-    right: 25,
-    bottom: 30,
-    width: 65,
-    height: 65,
-    borderRadius: 35,
-    backgroundColor: "#005A9C",
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 6,
-  },
+  
 });

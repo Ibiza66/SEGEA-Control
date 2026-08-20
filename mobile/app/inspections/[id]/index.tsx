@@ -1,8 +1,9 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View ,ScrollView } from "react-native";
 
 import PrimaryButton from "../../../src/components/ui/PrimaryButton";
-
+import GradientBackground from "../../../src/components/layout/GradientBackground";
+import { vehicles } from "../../../src/data/vehicles";
 import {
   deleteInspection,
   getInspectionById,
@@ -12,7 +13,9 @@ export default function InspectionDetailScreen() {
   const { id } = useLocalSearchParams();
 
   const inspection = getInspectionById(id as string);
-
+ const vehicle = vehicles.find(
+  (v) => v.id === inspection?.vehicleId
+);
   if (!inspection) {
     return (
       <View style={styles.center}>
@@ -44,8 +47,12 @@ export default function InspectionDetailScreen() {
     );
   };
 
-  return (
-    <View style={styles.container}>
+ return (
+  <GradientBackground>
+  <ScrollView
+    style={styles.container}
+    contentContainerStyle={styles.content}
+  >
       <Text style={styles.title}>Detalle de Inspección</Text>
 
       <View style={styles.card}>
@@ -55,9 +62,16 @@ export default function InspectionDetailScreen() {
         </Text>
 
         <Text style={styles.label}>Vehículo</Text>
-        <Text style={styles.value}>
-          {inspection.vehicleId}
-        </Text>
+
+<Text style={styles.value}>
+  {vehicle
+    ? `${vehicle.marca} ${vehicle.modelo}`
+    : "Vehículo no encontrado"}
+</Text>
+
+<Text style={styles.value}>
+  Patente: {vehicle?.patente}
+</Text>
 
         <Text style={styles.label}>Fecha</Text>
         <Text style={styles.value}>
@@ -91,8 +105,9 @@ export default function InspectionDetailScreen() {
         title="Eliminar"
         onPress={eliminar}
       />
-    </View>
-  );
+       </ScrollView>
+  </GradientBackground>
+);
 }
 
 const styles = StyleSheet.create({
@@ -131,4 +146,7 @@ const styles = StyleSheet.create({
     color: "#555",
     marginTop: 3,
   },
+  content: {
+  paddingBottom: 40,
+},
 });
